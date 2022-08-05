@@ -928,7 +928,17 @@ classdef StanModel < handle
          p.block(0.05);
          if p.exitValue == 0
             str = regexp(p.stdout{1},'\ ','split');
-            ver = cellfun(@str2num,regexp(str{3},'\.','split'));
+            %orig
+            %ver = cellfun(@str2num,regexp(str{3},'\.','split'));
+            %spnn
+            if str2num(str{1}(end))<=2 %stanc2 and below
+                ver = cellfun(@str2num,regexp(str{3},'\.','split'));
+            else %stanc3 and above
+                ver=regexp(str{2},'\.','split');
+                ver{1}=num2str(regexp(ver{1},'\d'));
+                ver = cellfun(@str2num,ver);
+            end
+            %spnn
          else
             fprintf('%s\n',p.stdout{:});
          end
